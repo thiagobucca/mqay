@@ -4,26 +4,33 @@ import subprocess
 import datetime
 import paho.mqtt.client as mqtt
 
+
 service_names = ["service1", "service2", "service3"]
+
 
 broker_address = "yourbroker"
 broker_port = 1883
 broker_username = "youruser"
 broker_password = "yourpassword"
 
+
 client = mqtt.Client()
+
 
 client.username_pw_set(broker_username, broker_password)
 client.connect(broker_address, broker_port)
 
+
 while True:
     for service_name in service_names:
+
         try:
-            status_output = subprocess.check_output(["systemctl", "is-active", service_name])
-            is_active = status_output.decode().strip() == "active"
+            status_output = subprocess.call(["systemctl", "is-active", "--quiet", service_name])
+            is_active = status_output == 0
         except Exception as e:
             print(f"Error checking status for {service_name}: {e}")
             continue
+
 
         if is_active:
             try:
@@ -37,9 +44,11 @@ while True:
                 print(f"Error retrieving process ID for {service_name}: {e}")
                 continue
 
+
             process = psutil.Process(pid)
             memory_info = process.memory_info()
             memory_usage = memory_info.rss / 1024 / 1024
+
 
             uptime = datetime.datetime.now() - datetime.datetime.fromtimestamp(process.create_time())
             uptime_str = ""
@@ -52,6 +61,7 @@ while True:
                 minutes = uptime.seconds // 60
                 uptime_str = f"{minutes} minutes"
 
+
             client.publish(
                 f"systemd-service/{service_name}/memory", f"{memory_usage:.2f}")
             client.publish(
@@ -60,6 +70,6 @@ while True:
             client.publish(
                 f"systemd-service/{service_name}/memory", "0")
             client.publish(
-                f"systemd-service/{service_name}/cpu_time", "Off")
+                f"systemd-service/{service_name}/cpu_time", "Desligado")
 
     time.sleep(60)
