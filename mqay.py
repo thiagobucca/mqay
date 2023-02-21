@@ -60,6 +60,6 @@ while True:
             client.publish(
                 f"systemd-service/{service_name}/memory", "0")
             client.publish(
-                f"systemd-service/{service_name}/cpu_time", "Desligado")
+                f"systemd-service/{service_name}/cpu_time", "Off")
 
     time.sleep(60)
