@@ -3,9 +3,10 @@ import time
 import subprocess
 import datetime
 import paho.mqtt.client as mqtt
+import sys
 
 
-service_names = ["service1", "service2", "service3"]
+service_names = sys.argv[1:]
 
 
 broker_address = "yourbroker"
@@ -63,13 +64,13 @@ while True:
 
 
             client.publish(
-                f"systemd-service/{service_name}/memory", f"{memory_usage:.2f}")
+                f"mqay/{service_name}/memory", f"{memory_usage:.2f}")
             client.publish(
-                f"systemd-service/{service_name}/cpu_time", f"Up {uptime_str}")
+                f"mqay/{service_name}/cpu_time", f"Up {uptime_str}")
         else:
             client.publish(
-                f"systemd-service/{service_name}/memory", "0")
+                f"mqay/{service_name}/memory", "0")
             client.publish(
-                f"systemd-service/{service_name}/cpu_time", "Off")
+                f"mqay/{service_name}/cpu_time", "Off")
 
     time.sleep(60)
