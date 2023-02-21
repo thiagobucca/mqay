@@ -52,7 +52,7 @@ To build the Docker image for MQay, run the following command in the project dir
 
 `docker build -t mqay .`
 
-This will build a Docker image with the name my-mqay-image.
+This will build a Docker image with the name mqay.
 
 To run the MQay script in a Docker container, you can use the following command:
 
@@ -60,6 +60,8 @@ To run the MQay script in a Docker container, you can use the following command:
 
 Make sure to replace the values of the environment variables with your own values. The --rm flag ensures that the container is removed after it stops running.
 
+
+## How it works
 
 The script will start monitoring the specified systemd services and publishing their memory usage and uptime information to the MQTT broker. When a service goes down, the script will publish the following information:
 
